@@ -1,5 +1,16 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
-
+# Descriere
+Automatele celulare sunt modele matematice și computaționale simple, dar puternice, care sunt utilizate pentru a simula comportamente complexe în diverse domenii, cum ar fi știința computațională, fizica, biologia și lingvistica. Ele sunt compuse dintr-o grilă sau un set de celule, fiecare cu unul sau mai multe stări posibile, care evoluează în timp în funcție de un set de reguli simple. Fiecare celulă interacționează cu vecinii săi în conformitate cu aceste reguli, iar starea fiecărei celule la un moment dat este determinată în întregime de starea sa actuală și de starea vecinilor săi.
+Aceast proiect are ca scop prezentarea practicalitatilor automatelor celulare in:
+  - [ ] Criptografie a imaginilor
+  - [ ] Generare a numerelor aleatorii
+  - [ ] Fractali
+  - [ ] Simulari
+      - [ ] Nisip
+      - [ ] Apa
+  - [ ] Efecte
+      - [ ] Blur
+  - [ ] Animatii
+  - etc
 ### Important!
 Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
 Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
