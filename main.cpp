@@ -1,54 +1,160 @@
 #include <iostream>
-#include <array>
-
+#include <string>
 #include <Helper.h>
 
+
+using namespace std;
+
+class Menu{
+private:
+public:
+    virtual void DisplayContent() const = 0;
+    virtual Menu* TakeInput() = 0 ;
+    Menu(){
+        cout << "Constructed\n";
+    };
+    virtual ~Menu(){cout << "Deconstructed\n";}
+};
+class Main: public Menu{
+public:
+    void DisplayContent() const override{
+        cout << "<--- Applications of Cellular Automata --->\n\n";
+        cout << "1. Visualizations\n";
+        cout << "2. Cryptography\n";
+        cout << "3. Fractals\n";
+        cout << "4. Exit\n";
+    }
+    Menu* TakeInput() override;
+
+};
+class Visualization: public Menu{
+    void DisplayContent() const override{
+        cout << "<--- Visualizations --->\n";
+        cout << "1. Wolfram's Elementary rules\n";
+        cout << "2. Conway's Game of Life\n";
+        cout << "3. Belousov-Zhabotinsky\n";
+        cout << "4. Custom 2D Cellular Automaton\n";
+        cout << "5. Back\n";
+    }
+    Menu* TakeInput() override;
+};
+class Cryptography: public Menu{
+    void DisplayContent() const override{
+        cout << "<--- Cryptography --->\n";
+        cout << "1. Image Encryption\n";
+        cout << "2. Text Encryption\n";
+        cout << "3. Back\n";
+    }
+    Menu* TakeInput() override;
+};
+class Fractal: public Menu{
+    void DisplayContent() const override{
+        cout << "<--- Fractals --->\n";
+        cout << "1. Wolfram's Elementary Rules\n";
+        cout << "2. More Fractals\n";
+        cout << "3. Back\n";
+    }
+    Menu* TakeInput() override;
+};
+
+Menu* Main::TakeInput() {
+    string input;
+    cin >> input;
+    if(input == "1"){
+        return new Visualization();
+    }
+    if(input == "2"){
+        return new Cryptography;
+    }
+    if(input == "3"){
+        return new Fractal();
+    }
+    if(input == "4"){
+        return nullptr;
+    }
+    return new Main();
+
+}
+
+Menu* Visualization::TakeInput() {
+    string input;
+    cin >> input;
+    if(input == "1"){
+        //Wolfram
+        return new Visualization();
+    }
+    if(input == "2"){
+        //Conways
+        return new Visualization();
+    }
+    if(input == "3"){
+        //Belousov
+        return new Visualization();
+    }
+    if(input == "4"){
+        //Custom
+        return new Visualization();
+    }
+    if(input == "5"){
+        //Back
+        return new Main();
+    }
+    return new Visualization();
+
+
+}
+
+Menu* Fractal::TakeInput() {
+    string input;
+    cin >> input;
+    if(input == "1"){
+        //Wolfram
+        return new Fractal();
+    }
+    if(input == "2"){
+        //More
+        return new Fractal();
+    }
+    if(input == "3"){
+        //Back
+        return new Main();
+    }
+    return new Fractal();
+
+}
+
+Menu* Cryptography::TakeInput() {
+    string input;
+    cin >> input;
+    if(input == "1"){
+        //Image
+        return new Cryptography();
+    }
+    if(input == "2"){
+        //Text
+        return new Cryptography();
+    }
+    if(input == "3"){
+        //Back
+        return new Main();
+    }
+    return new Cryptography();
+
+}
+
+void runGame(Menu* current){
+    if(current == nullptr)
+        return;
+    current->DisplayContent();
+    Menu* next = current->TakeInput();
+    delete current;
+    runGame(next);
+}
+
+
 int main() {
-    std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
-    /////////////////////////////////////////////////////////////////////////
-    /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
-    /// dați exemple de date de intrare folosind fișierul tastatura.txt
-    /// Trebuie să aveți în fișierul tastatura.txt suficiente date de intrare
-    /// (în formatul impus de voi) astfel încât execuția programului să se încheie.
-    /// De asemenea, trebuie să adăugați în acest fișier date de intrare
-    /// pentru cât mai multe ramuri de execuție.
-    /// Dorim să facem acest lucru pentru a automatiza testarea codului, fără să
-    /// mai pierdem timp de fiecare dată să introducem de la zero aceleași date de intrare.
-    ///
-    /// Pe GitHub Actions (bife), fișierul tastatura.txt este folosit
-    /// pentru a simula date introduse de la tastatură.
-    /// Bifele verifică dacă programul are erori de compilare, erori de memorie și memory leaks.
-    ///
-    /// Dacă nu puneți în tastatura.txt suficiente date de intrare, îmi rezerv dreptul să vă
-    /// testez codul cu ce date de intrare am chef și să nu pun notă dacă găsesc vreun bug.
-    /// Impun această cerință ca să învățați să faceți un demo și să arătați părțile din
-    /// program care merg (și să le evitați pe cele care nu merg).
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
-    }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
-    ///
-    ///////////////////////////////////////////////////////////////////////////
-    ///                Exemplu de utilizare cod generat                     ///
+
+    runGame(new Main());
     ///////////////////////////////////////////////////////////////////////////
     Helper helper;
     helper.help();
