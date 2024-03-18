@@ -71,6 +71,7 @@ public:
         this->ruleNumber = ruleNumber;
         this->maxDepth = maxDepth;
         this->maxLength = maxLength;
+        this->input = 0;
     }
     void DisplayContent() const override{
         if(this->state == 0)
@@ -116,6 +117,7 @@ Menu* WolframVisualMenu::TakeInput(){
         }
         return new WolframVisualMenu(cState,rNum,mDep,mLen);
     }
+    return new WolframVisualMenu();
 }
 
 Menu* Main::TakeInput() {
