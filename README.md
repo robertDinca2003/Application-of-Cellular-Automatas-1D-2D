@@ -1,7 +1,10 @@
 # Descriere
 Automatele celulare sunt modele matematice și computaționale simple, dar puternice, care sunt utilizate pentru a simula comportamente complexe în diverse domenii, cum ar fi știința computațională, fizica, biologia și lingvistica. Ele sunt compuse dintr-o grilă sau un set de celule, fiecare cu unul sau mai multe stări posibile, care evoluează în timp în funcție de un set de reguli simple. Fiecare celulă interacționează cu vecinii săi în conformitate cu aceste reguli, iar starea fiecărei celule la un moment dat este determinată în întregime de starea sa actuală și de starea vecinilor săi.
 Aceast proiect are ca scop prezentarea practicalitatilor automatelor celulare in:
-  - [ ] Criptografie a imaginilor
+  - [X] Vizualizari
+  - [ ] Criptografie
+        - [ ] Imagini
+        - [ ] Text
   - [ ] Generare a numerelor aleatorii
   - [ ] Fractali
   - [ ] Simulari
