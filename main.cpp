@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <Helper.h>
+#include <vector>
 
 
 using namespace std;
@@ -57,6 +58,66 @@ class Fractal: public Menu{
     Menu* TakeInput() override;
 };
 
+class WolframVisualMenu: public Menu{
+private:
+    int state;
+    int input;
+    int ruleNumber;
+    int maxDepth;
+    int maxLength;
+public:
+    explicit WolframVisualMenu(int state = 0, int ruleNumber = 255, int maxDepth = 30, int maxLength = 50){
+        this->state = state;
+        this->ruleNumber = ruleNumber;
+        this->maxDepth = maxDepth;
+        this->maxLength = maxLength;
+    }
+    void DisplayContent() const override{
+        if(this->state == 0)
+        {
+            cout << "<--- Wolfram's Rules Visualization --->\n";
+            cout << "Current Settings:\n";
+            cout << "1. Current Rule: 0\n";
+            cout << "2. Maximum Length: 50\n";
+            cout << "3. Maximum Depth: 30\n";
+            cout << "\n4. Generate!\n";
+            cout << "5. Go Back\n";
+        }
+    }
+    Menu* TakeInput() override;
+};
+
+Menu* WolframVisualMenu::TakeInput(){
+    cout << "\nCurrent Input: ";
+    cin >> input;
+    int rNum = this->ruleNumber;
+    int mLen = this->maxLength;
+    int mDep = this->maxDepth;
+    int cState = this->state ;
+    if(this->state == 0)
+    {
+        switch (input) {
+            case 1:
+                cout << "Insert new rule number: ";
+                cin >> rNum;
+                break;
+            case 2:
+                cout << "Insert new maximum length: ";
+                cin >> mLen;
+                break;
+            case 3:
+                cout << "Insert new maximum depth: ";
+                cin >> mDep;
+                break;
+            case 4:
+                break;
+            case 5:
+                return new Visualization();
+        }
+        return new WolframVisualMenu(cState,rNum,mDep,mLen);
+    }
+}
+
 Menu* Main::TakeInput() {
     string input;
     cin >> input;
@@ -81,7 +142,7 @@ Menu* Visualization::TakeInput() {
     cin >> input;
     if(input == "1"){
         //Wolfram
-        return new Visualization();
+        return new WolframVisualMenu();
     }
     if(input == "2"){
         //Conways
@@ -145,15 +206,212 @@ Menu* Cryptography::TakeInput() {
 void runGame(Menu* current){
     if(current == nullptr)
         return;
-    current->DisplayContent();
-    Menu* next = current->TakeInput();
-    delete current;
-    runGame(next);
+    else{
+        current->DisplayContent();
+        Menu* next = current->TakeInput();
+        delete current;
+        runGame(next);
+    }
+
 }
 
 
-int main() {
+class ElementaryRule{
+private:
+    int ruleNumber;
+    int maxLength;
+    int maxDepth;
+    int nrCurrGen;
+    int maxGenerated;
+    vector<int> ruleCod = vector<int>(8);
+    vector<int> startGen;
+    vector<int> currGen;
+    vector<vector<int>> allGenerations;
+public:
+    explicit ElementaryRule(int ruleNumber = 90, int maxLength = 50, int maxDepth = 30, vector<int> startGen = {-1}){
+        // Initialize integer variables
+        this->ruleNumber = ruleNumber;
+        this->maxLength = maxLength;
+        this->maxDepth = maxDepth;
+        this->nrCurrGen = 0;
+        this->maxGenerated = 0;
 
+        //Generate Rule Set
+        int tempNumber = this->ruleNumber;
+        for(int i = 0; i<8; i++)
+        {
+            ruleCod[i] = tempNumber & 1;
+            tempNumber = tempNumber >> 1;
+
+        }
+
+        //Setting up vector lengths
+        //Initialize initial generation
+        this->currGen.resize(maxLength);
+
+        this->startGen.resize(maxLength);
+        for(int i = 0 ; i<maxLength; i++)
+            this->startGen[i] = 0;
+        if(startGen.size() == 1 && startGen[0] == -1)
+            this->startGen[maxLength/2] = 1;
+        else for(int i = 0 ; i<maxLength; i++)
+            this->startGen[i] = startGen[i];
+
+        allGenerations.resize(maxDepth);
+        for(int i = 0 ; i<maxDepth;i++)
+            allGenerations[i].resize(maxLength);
+        for(int i = 0; i<maxLength;i++)
+            allGenerations[0][i] = this->startGen[i], currGen[i] = this->startGen[i];
+        cout << "Constructed Elementary Rule\n";
+    }
+    ~ElementaryRule(){
+        cout << "Deconstructed Elementary Rule\n";
+    }
+
+    int getRuleNumber(){
+        return this->ruleNumber;
+    }
+    int getCurrGenNumber(){
+        return this->nrCurrGen;
+    }
+    vector<int> getCurrGeneration(){
+        return this->currGen;
+    }
+    vector<int> getStartGen(){
+        return this->startGen;
+    }
+
+    void setMaxDepth(int newMaxDepth){
+        if(newMaxDepth < this->maxDepth)
+        {
+            //Throw Exception
+            cout << "Can t decrease in depth\n";
+            return;
+        }
+        this->maxDepth = newMaxDepth;
+        this->allGenerations.resize(this->maxDepth);
+
+    }
+    void setMaxLength(int newMaxLength){
+        if(newMaxLength < this->maxLength)
+        {
+            //Throw Exception
+            cout << "Cant decrease in lengt\n";
+            return;
+        }
+        this->maxLength = newMaxLength;
+        this->currGen.resize(this->maxLength);
+        for(int i = 0; i < maxDepth ; i++)
+            allGenerations[i].resize(this->maxLength);
+
+    }
+
+    void CreateNextGen(){
+        if(nrCurrGen < maxGenerated)
+        {
+            nrCurrGen++;
+            for(int i = 0 ; i < maxLength; i++)
+                currGen[i] = allGenerations[nrCurrGen][i];
+            return;
+        }
+        if(nrCurrGen == maxDepth-1)
+        {
+            // Exception throw
+            cout << "Max Size Reached";
+            return;
+        }
+        nrCurrGen++;
+        maxGenerated++;
+        vector<int> temp(maxLength);
+        for (int i = 0; i < maxLength; i++)
+            temp[i] = currGen[(i - 1 + maxLength) % maxLength] * 4 + currGen[i] * 2 +
+                      currGen[(i + maxLength + 1) % maxLength];
+        for(int i = 0 ; i < maxLength; i++)
+            currGen[i] = ruleCod[temp[i]], allGenerations[nrCurrGen][i] = currGen[i];
+
+    }
+    void MultipleGeneration(int depth){
+        if(depth >= maxDepth)
+        {
+            //Throw Exeception
+            return;
+        }
+        if(depth < maxGenerated)
+            return;
+        for(int i = nrCurrGen; i < depth; i++)
+            CreateNextGen();
+    }
+    void DisplayCurrentGeneration(){
+        cout << "Current generation "<<nrCurrGen<<"\n";
+        for(int i = 0 ; i< maxLength; i++){
+            cout << currGen[i];
+        }
+        cout << "\n";
+    }
+    void DisplayUpToCurrentGeneration(){
+        cout << "Generation from 0 to "<< nrCurrGen << ":\n";
+        for(int i = 0;i<=nrCurrGen; i++)
+        {
+            for(int j = 0 ; j< maxLength;j++)
+            {
+                if(allGenerations[i][j])
+                cout << 0;
+                else
+                    cout << ' ';
+            }
+            cout << '\n';
+        }
+    }
+    void UpdateCurrGeneration(int number){
+        if(number < maxGenerated)
+        {
+            this->nrCurrGen = number;
+            for(int i = 0 ; i< maxLength; i++)
+            {
+                currGen[i] = allGenerations[nrCurrGen][i];
+            }
+        }
+        if(number > maxGenerated)
+        {
+            MultipleGeneration(number);
+        }
+
+    }
+    void GenerateToMaxDepth(){
+        MultipleGeneration(maxDepth-1);
+    }
+    void DisplayAll(){
+        if(maxGenerated < maxDepth-1)
+        GenerateToMaxDepth();
+        UpdateCurrGeneration(maxDepth-1);
+        DisplayUpToCurrentGeneration();
+    }
+};
+
+
+int main() {
+    ElementaryRule rule30(30);
+    rule30.DisplayCurrentGeneration();
+    rule30.CreateNextGen();
+    rule30.DisplayCurrentGeneration();
+    rule30.CreateNextGen();
+    rule30.DisplayCurrentGeneration();
+    rule30.MultipleGeneration(15);
+    rule30.UpdateCurrGeneration(10);
+    rule30.DisplayCurrentGeneration();
+    rule30.DisplayUpToCurrentGeneration();
+    rule30.MultipleGeneration(25);
+    rule30.DisplayUpToCurrentGeneration();
+    rule30.DisplayAll();
+    cout << '\n' << rule30.getCurrGenNumber() << ' ' << rule30.getRuleNumber()<<'\n';
+    for(int x : rule30.getCurrGeneration())
+        cout << x << ' ';
+    cout << '\n';
+    for(int x : rule30.getStartGen())
+        cout << x << ' ';
+    cout << '\n';
+    rule30.setMaxDepth(50);
+    rule30.setMaxLength(100);
     runGame(new Main());
     ///////////////////////////////////////////////////////////////////////////
     Helper helper;
