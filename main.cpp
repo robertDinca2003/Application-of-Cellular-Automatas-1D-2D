@@ -176,6 +176,7 @@ public:
             GenerateToMaxDepth();
         UpdateCurrGeneration(maxDepth-1);
         DisplayUpToCurrentGeneration();
+
     }
 };
 
