@@ -308,6 +308,7 @@ Menu* WolframVisualMenu::TakeInput(){
                 //runWolframVisualization(rNum,mLen,mDep);
                 break;
             case 5:
+                delete this->ruleSet;
                 return new Visualization();
         }
         delete this->ruleSet;
