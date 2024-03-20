@@ -55,20 +55,79 @@ public:
             allGenerations[0][i] = this->startGen[i], currGen[i] = this->startGen[i];
         cout << "Constructed Elementary Rule\n";
     }
+    ElementaryRule(const ElementaryRule &other):ruleNumber(other.ruleNumber),maxLength(other.maxLength),maxDepth(other.maxDepth),nrCurrGen(other.nrCurrGen),maxGenerated(other.maxGenerated){
+        cout << "I am starting from here\n";
+        for(int i = 0 ; i < 8 ; i++)
+            this->ruleCod[i] = other.ruleCod[i];
+        this->startGen.resize(other.startGen.size());
+        for(size_t i = 0 ; i<other.startGen.size(); i++)
+            this->startGen[i] = other.startGen[i];
+        this->allGenerations.resize(other.maxDepth);
+        cout << "I am here 1\n";
+        for(size_t i = 0 ; i<allGenerations.size(); i++)
+            this->allGenerations[i].resize(maxLength);
+
+        for(size_t i = 0 ; i<allGenerations.size(); i++)
+            for(int j = 0 ; j<maxLength;j++)
+                this->allGenerations[i][j] = other.allGenerations[i][j];
+        this->currGen.resize(maxLength);
+        for(int i = 0 ; i < maxLength; i++)
+            this->currGen[i] = other.allGenerations[other.nrCurrGen][i];
+        cout << "I am here 2\n";
+
+    }
+
+
+
     ~ElementaryRule(){
         cout << "Deconstructed Elementary Rule\n";
     }
-public:
+    friend ostream &operator<<(ostream &os, const ElementaryRule &rule) {
+        os << "ruleNumber: " << rule.ruleNumber << " maxLength: " << rule.maxLength << " maxDepth: " << rule.maxDepth
+           << " nrCurrGen: " << rule.nrCurrGen << " maxGenerated: " << rule.maxGenerated;
+        return os;
+    }
+    ElementaryRule &operator=(const ElementaryRule &other){
+        cout << "Stating\n";
+        if(this == &other)
+            return *this;
+        cout << "I am here 1\n";
+        this->ruleNumber = other.ruleNumber;
+        this->maxLength = other.maxLength;
+        this->maxDepth = other.maxDepth;
+        this->nrCurrGen = other.nrCurrGen;
+        this->maxGenerated = other.maxGenerated;
+        cout << "I am here 2\n";
+        for(int i = 0 ; i < 8 ; i++)
+            this->ruleCod[i] = other.ruleCod[i];
+        this->startGen.resize(other.startGen.size());
+        for(size_t i = 0 ; i<other.startGen.size(); i++)
+            this->startGen[i] = other.startGen[i];
+        this->allGenerations.resize(other.maxDepth);
+        cout << "I am here 3\n";
+        for(size_t i = 0 ; i<allGenerations.size(); i++)
+            this->allGenerations[i].resize(maxLength);
+        for(size_t i = 0 ; i<allGenerations.size(); i++)
+            for(int j = 0 ; j<maxLength;j++)
+                this->allGenerations[i][j] = other.allGenerations[i][j];
+        this->currGen.resize(maxLength);
+        for(int i = 0 ; i < maxLength; i++)
+            this->currGen[i] = other.allGenerations[other.nrCurrGen][i];
+
+        return *this;
+    }
+
+
     int getRuleNumber() const{
         return this->ruleNumber;
     }
     int getCurrGenNumber() const{
         return this->nrCurrGen;
     }
-    vector<int> getCurrGeneration(){
+    vector<int> getCurrGeneration() const{
         return this->currGen;
     }
-    vector<int> getStartGen(){
+    vector<int> getStartGen() const{
         return this->startGen;
     }
 
@@ -132,14 +191,14 @@ public:
         for(int i = nrCurrGen; i < depth; i++)
             CreateNextGen();
     }
-    void DisplayCurrentGeneration(){
+    void DisplayCurrentGeneration() const{
         cout << "Current generation "<<nrCurrGen<<"\n";
         for(int i = 0 ; i< maxLength; i++){
             cout << currGen[i];
         }
         cout << "\n";
     }
-    void DisplayUpToCurrentGeneration(){
+    void DisplayUpToCurrentGeneration() const {
         cout << "Generation from 0 to "<< nrCurrGen << ":\n";
         for(int i = 0;i<=nrCurrGen; i++)
         {
@@ -191,6 +250,13 @@ public:
         cout << "Constructed Menu\n";
     };
     virtual ~Menu(){cout << "Deconstructed Menu\n";}
+
+    friend ostream &operator<<(ostream &os, const Menu &menu) {
+
+        menu.DisplayContent();
+
+        return os;
+    }
 };
 class Main: public Menu{
 public:
@@ -437,7 +503,8 @@ void runGame(Menu* current){
     if(current == nullptr)
         return;
     else{
-        current->DisplayContent();
+        cout << *current;
+        //current->DisplayContent();
         Menu* next = current->TakeInput();
         delete current;
         runGame(next);
@@ -448,6 +515,7 @@ void runGame(Menu* current){
 
 
 int main() {
+    // Functionalitati ale clasei Elementary rule
     ElementaryRule rule30(30);
     rule30.DisplayCurrentGeneration();
     rule30.CreateNextGen();
@@ -468,8 +536,14 @@ int main() {
     for(int x : rule30.getStartGen())
         cout << x << ' ';
     cout << '\n';
+    cout << rule30<<'\n';
     rule30.setMaxDepth(50);
     rule30.setMaxLength(100);
+    cout << rule30<<'\n';
+    ElementaryRule copyRule = rule30;
+    cout << copyRule << '\n';
+
+    // Functionalitate Aplicatie
     runGame(new Main());
     ///////////////////////////////////////////////////////////////////////////
     Helper helper;
