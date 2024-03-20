@@ -46,7 +46,7 @@ O cerință nu se consideră îndeplinită dacă este realizată doar ca o serie
 - [X] scenariu de utilizare a claselor definite:
   - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
   - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există); dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [ ] tag de `git`: de exemplu `v0.1`
+- [X] tag de `git`: de exemplu `v0.1`
 - [X] serviciu de integrare continuă (CI); exemplu: GitHub Actions
 
 ## Tema 2
