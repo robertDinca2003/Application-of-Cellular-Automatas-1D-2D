@@ -159,6 +159,7 @@ public:
             currGen[i] = ruleCod[temp[i]], allGenerations[nrCurrGen][i] = currGen[i];
 
     }
+
     /// @brief Used to generate multiple generation, it is based on CreateNextGen()
     void MultipleGeneration(int depth) {
         if (depth >= maxDepth) {
@@ -170,6 +171,7 @@ public:
         for (int i = nrCurrGen; i < depth; i++)
             CreateNextGen();
     }
+
     /// @brief Used for displaying the current generation
     void DisplayCurrentGeneration() const {
         std::cout << "Current generation " << nrCurrGen << "\n";
@@ -178,6 +180,7 @@ public:
         }
         std::cout << "\n";
     }
+
     /// @brief Used to display all generation from 0 to nrCurrGen
     void DisplayUpToCurrentGeneration() const {
         std::cout << "Generation from 0 to " << nrCurrGen << ":\n";
@@ -254,6 +257,7 @@ public:
     Menu *TakeInput() override;
 
 };
+
 /// @brief Visualization - represent a submenu in which are presented different ways to visualize automata
 class Visualization : public Menu {
     void DisplayContent() const override {
